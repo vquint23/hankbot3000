@@ -19,6 +19,7 @@
   "homepage": "https://github.com/vquint23/hankbot3000#readme",
   "dependencies": {
     "discord.js": "^12.5.3",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "rpg-dice-roller": "^4.5.2"
   }
 }
