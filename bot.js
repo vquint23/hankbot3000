@@ -135,7 +135,8 @@ client.on('message', async message => {
         if (messageCount === messageTarget){
             var title = "Uh Oh!";
             var description = `${user} a glungablug has taken your `+ items[getRandomNumber(0, items.length)] + '!';
-            message.reply(embedFactory(title, null, description, null,null,null,null,null));
+            var image = "./images/glungablug.jpg";
+            message.reply(embedFactory(title, null, description, image,null,null,null,null));
             messageCount = 0;
             messageTarget = getRandomNumber(1, 30);
         }
@@ -159,9 +160,6 @@ client.on('message', async message => {
             case "r":
             case "roll":
                 rollDice(message, args);
-                break;
-            case "gold":
-                giveGold(message);
                 break;
             case 'dog':
                 const dog = await fetch('https://random.dog/woof.json')
