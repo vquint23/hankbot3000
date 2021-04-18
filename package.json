@@ -1,0 +1,19 @@
+{
+  "name": "hankbot3000",
+  "version": "1.0.0",
+  "description": "Discord Bot to assist with Z&D 2: Electric Boogaloo sessions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vquint23/hankbot3000.git"
+  },
+  "author": "VQuint23",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vquint23/hankbot3000/issues"
+  },
+  "homepage": "https://github.com/vquint23/hankbot3000#readme"
+}
