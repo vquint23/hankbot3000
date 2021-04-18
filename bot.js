@@ -8,6 +8,21 @@ const roller = new DiceRoller();
 var messageCount = 0;
 var messageTarget = getRandomNumber(1, 30);
 
+const colors = [
+    "images/1.jpg", "images/2.jpg", "images/3.jpg", "images/4.jpg", "images/5.jpg", 
+    "images/black.jpg", "images/black2.jpg", "images/black3.jpg", "images/black4.jpg", "images/black5.jpg",
+    "images/blue.jpg", "images/blue2.jpg", "images/blue3.jpg", "images/blue4.jpg",
+    "images/chestnut.jpg", "images/chestnut2.jpg", "images/chestnut3.jpg", "images/chestnut4.jpg", "images/chestnut5.jpg", "images/chestnut6.jpg",
+    "images/dark brown solid.jpg", "images/dark brown solid2.jpg", "images/dark brown solid3.jpg", "images/dark brown solid4.jpg", "images/dark brown solid5.jpg", "images/dark brown solid6.jpg",
+    "images/gray.jpg", "images/gray2.jpg", "images/gray3.jpg", "images/gray4.jpg", "images/gray5.jpg", "images/gray6.jpg",
+    "images/light blue.jpg", "images/light blue2.jpg", "images/light blue3.jpg", "images/light blue4.jpg", "images/light blue5.jpg",
+    "images/peach.jpg", "images/peach2.jpg", "images/peach3.jpg", "images/peach4.jpg",
+    "images/solid black.jpg", "images/solid black2.jpg","images/solid black3.jpg","images/solid black4.jpg","images/solid black5.jpg","images/solid black6.jpg",
+    "images/solid chestnut.jpg", "images/solid chestnut2.jpg", "images/solid chestnut3.jpg",
+    "images/solid chestnut4.jpg", "images/solid chestnut5.jpg", "images/solid chestnut6.jpg",
+    "images/taupe.jpg", "images/taupe2.jpg", "images/taupe3.jpg", "images/taupe4.jpg", "images/taupe5.jpg", "images/taupe6.jpg",
+];
+
 var items = ["sword","shield","arrow","rupees","potion","glasses","tea","bat","fork","book","journal","dagger",
     "spellbook","spell components","armor","bag of holding","food","rations","friends","charisma", "contacts",
     "intelligence","strength","constitution","dexterity","wisdom","gout","hit points","dice","mofongo","french fries",
@@ -26,7 +41,7 @@ client.on("ready", () => {
     Crafts an embed message with these fields. If a field isn't needed, it should be provided as "null".
     Returns the final embed to be sent in the channel
 */
-function embedFactory(title, author, description, thumbnail, url, image, fieldsData, footer) {
+function embedFactory(title, author, description, thumbnail, url, image, fieldsData, footer, files) {
     let embed = new MessageEmbed();
     if(title != null) embed.setTitle(title);
     if(author != null) embed.setAuthor(author);
@@ -41,6 +56,7 @@ function embedFactory(title, author, description, thumbnail, url, image, fieldsD
             embed.addField(fieldsData[i][0], fieldsData[i][1], fieldsData[i][2]);
         }
     }
+    if (files != null) embed.attachFiles(files);
     embed.setColor(Math.floor(Math.random()*16777215).toString(16))
     return embed;
 }
@@ -335,41 +351,44 @@ function getTreasure(message, reward){
 function getHorse(message){
     var title = "Horse Generator";        
     var description = "Horse Stats";
-    const colors = ["taupe", "peach", "gray", "chestnut", "dark brown", "black", "blue"];
     var hp = 50;
     var movement = 40;
     var strength = roller.roll("1d5").total;        
-        switch (strength){
-            case 1: 
-                hp = 100;
-                break;
-            case 2:
-                hp = 150;
-                break;
-            case 3: 
-                hp = 180;
-                break
-            case 4:
-                hp = 220;
-                break;
-            case 5:
-                hp = 300;
-                break;
-        }
-        var speed = roller.roll("1d4+1").total;
-        if(speed == 2) movement = 50;
-        if (speed == 3) movement = 60;
-        if (speed == 4) movement = 70;
-        if (speed == 5) movement = 80;        
-        var stamina = roller.roll("1d4+1").total;
-        var color = roller.roll("1d7-1").total; 
-        var fieldsData = [
-            ["Strength", `${strength}*, ${hp} HP.`, true],
-            ["Speed", `${speed}*, ${movement} ft. movement.`, true],
-            ["Stamina", `${stamina}*, or ${stamina} dashes per short rest`, true],
-            ["Color", `${colors[color]}`, true]
-        ];         
-    message.reply(embedFactory(title, null, description, null, null, null, fieldsData, null));
+    switch (strength){
+        case 1: 
+            hp = 100;
+            break;
+        case 2:
+            hp = 150;
+            break;
+        case 3: 
+            hp = 180;
+            break
+        case 4:
+            hp = 220;
+            break;
+        case 5:
+            hp = 300;
+            break;
+    }
+    var speed = roller.roll("1d4+1").total;
+    if(speed == 2) movement = 50;
+    if (speed == 3) movement = 60;
+    if (speed == 4) movement = 70;
+    if (speed == 5) movement = 80;        
+    var stamina = roller.roll("1d4+1").total;
+    var color = roller.roll("1d7-1").total; 
+    var fieldsData = [
+        ["Strength", `${strength}*, ${hp} HP.`, true],
+        ["Speed", `${speed}*, ${movement} ft. movement.`, true],
+        ["Stamina", `${stamina}*, or ${stamina} dashes per short rest`, true],
+    ];         
+    var color = getRandomNumber(0, colors.length-1);
+    console.log("Number: " + color, ", Color: " + colors[color]);
+    const attachment = new Discord.MessageAttachment(colors[color], "horse.jpg");
+    const image = 'attachment://horse.jpg';
+    message.reply(embedFactory(title, null, description, null, null, image, fieldsData, null, attachment));
+    //message.channel.send(image);
 }
 
 // Message Recieved
