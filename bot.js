@@ -95,7 +95,30 @@ function getSpell(message, args){
             name = name + "-" + args[1+i];
         }
     }
-    
+    try{
+        fetch(`https://www.dnd5eapi.co/api/spells/${name}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.name === undefined) message.channel.send(name + " was not found.");
+                else{
+                    var title = data.name;
+                    var fieldsData = [
+                        ['Casting Time', data.casting_time, true],
+                        ['Level', data.level, true],
+                        ['Range', data.range, true],
+                        ['Duration', data.duration, true],
+                        ['Concentration', data.concentration, true],
+                        ['Components', data.components.toString(), true],
+                        ['Higher Levels', data.higher_level, true]
+                    ];
+                    var description = data.desc;
+                    var url = 'https://www.dnd5eapi.co/' + data.url;
+                    message.channel.send(embedFactory(title, null, description, null, url, null, fieldsData, null));
+                }
+            });
+        } catch (err){
+            console.error(err);
+        }
 }
 
 // Message Recieved
@@ -139,7 +162,9 @@ client.on('message', async message => {
                 giveGold(message);
                 break;
             case 'dog':
-                const dog = await fetch('https://random.dog/woof.json').then(response=>response.json());
+                const dog = await fetch('https://random.dog/woof.json')
+                    .then(response=>response.json())
+                    .catch (err => console.error(err));
                 var link = dog.url;
                 message.channel.send(link);
                 break;
