@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/vquint23/hankbot3000/issues"
   },
-  "homepage": "https://github.com/vquint23/hankbot3000#readme"
+  "homepage": "https://github.com/vquint23/hankbot3000#readme",
+  "dependencies": {
+    "discord.js": "^12.5.3"
+  }
 }
