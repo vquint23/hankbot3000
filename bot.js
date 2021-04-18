@@ -81,7 +81,7 @@ function rollDice(message, args){
     Returns the random integer between the two values.
 */
 function getRandomNumber(min, max) {
-    return Math.ceil((Math.random() * (max - min)) + min);
+    return Math.ceil((Math.random() * (max - min)));
 }
 
 /* Get Spell
@@ -134,9 +134,9 @@ client.on('message', async message => {
         messageCount++;
         if (messageCount === messageTarget){
             var title = "Uh Oh!";
-            var description = `${user} a glungablug has taken your `+ items[getRandomNumber(0, items.length)] + '!';
-            var image = "./images/glungablug.jpg";
-            message.reply(embedFactory(title, null, description, image,null,null,null,null));
+            var description = `${user}, a glungablug has taken your `+ items[getRandomNumber(0, items.length - 1)] + '!';
+            var image = "https://raw.githubusercontent.com/vquint23/hankbot3000/main/images/glungablug.jpg?token=AFQFIQDLFMWKGLSP7V22YOLAPRYHY";
+            message.reply(embedFactory(title, null, description, image, null, null, null, null));
             messageCount = 0;
             messageTarget = getRandomNumber(1, 30);
         }
