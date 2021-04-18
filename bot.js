@@ -12,7 +12,7 @@ var items = ["sword","shield","arrow","rupees","potion","glasses","tea","bat","f
     "intelligence","strength","constitution","dexterity","wisdom","gout","hit points","dice","mofongo","french fries",
     "messages","spells", "wallet", "bush jerky", "identity", "backstory", "spell slots", "civil liberties", "Primpyre Seaborne", 
     "Hank", "fans", "marketing tactics" ];
-    
+
 var prefix = "bak";
 
 // Ready
@@ -53,7 +53,7 @@ function showHelp(message){
     var fieldsData = [
         ["Help", "Opens this help menu.", false],
         ["Ping", "Hank sends back a pong.", false],
-        ["Roll", "Use the format \`xdxx +/- x\` to have a blug roll your dice.", false],
+        ["Roll", "Use the format \`xdxx +/- x\` to have Hank roll your dice.", false],
         ["Spell", "Search for a spell description using \`spell (name)\`.", false],
         ["Dog", "Hank will provide a picture of a dog.", false]
     ];           
@@ -143,7 +143,7 @@ client.on('message', async message => {
 
     // Otherwise, it's a command!
     else {
-        const commandBody = message.content.slice(process.env.PREFIX.length);
+        const commandBody = message.content.slice(prefix.length);
         // the rest goes in args
         const args = commandBody.split(' ');
         args.shift().toLowerCase();
@@ -156,7 +156,8 @@ client.on('message', async message => {
                 const timeTaken = Date.now() - message.createdTimestamp;
                 message.channel.send(`Pong! This message had a latency of ${timeTaken}ms.`);
                 break;
-            case "r" || "roll":
+            case "r":
+            case "roll":
                 rollDice(message, args);
                 break;
             case "gold":
