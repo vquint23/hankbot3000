@@ -12,6 +12,7 @@ var items = ["sword","shield","arrow","rupees","potion","glasses","tea","bat","f
     "intelligence","strength","constitution","dexterity","wisdom","gout","hit points","dice","mofongo","french fries",
     "messages","spells", "wallet", "bush jerky", "identity", "backstory", "spell slots", "civil liberties", "Primpyre Seaborne", 
     "Hank", "fans", "marketing tactics" ];
+    
 var prefix = "bak";
 
 // Ready
@@ -128,7 +129,7 @@ client.on('message', async message => {
     if (message.author.bot) return;
 
     // if its a message and not a command, then increment message count
-    else if (!message.content.startsWith(process.env.PREFIX)){
+    else if (!message.content.startsWith(prefix)){
          // increment message counter - and if equals the random number, steal something!
         messageCount++;
         if (messageCount === messageTarget){
