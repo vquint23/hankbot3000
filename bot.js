@@ -205,14 +205,6 @@ function getEncounter(message){
         }
         else description += roll.total + " Moblins!";
     }
-    else if (encounter >= 28 && encounter <= 32){
-        roll = roller.roll("1d4+1");
-        if (roll.total == 5) {
-            roll = roller.roll("1d4+2");
-            description += roll.total + " Stalmoblins!";
-        }
-        else description += roll.total + " Moblins!";
-    }
     else if (encounter >= 33 && encounter <= 42){
         roll = roller.roll("1d4+1");
         if (roll.total == 5) {
