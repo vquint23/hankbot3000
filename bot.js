@@ -616,10 +616,6 @@ client.on('message', async message => {
             case 'languages':
                 showLanguages(message);
                 break;
-            case 'bak':
-                if (!voiceChannel) message.reply ("Hank requires you to join a voice channel first.");
-                else hankNoise(message);
-                break;
             case 'say':
             case 'accent':
                 if (!voiceChannel) {
@@ -631,8 +627,14 @@ client.on('message', async message => {
                     message.reply("Translate requests should be in the format \`translate {language-code} \"text\".\`.");
                 break;
             // DM Commands! Secret. Shhhhhh.
+            case "dmv":
+                message.channel.send("Hank's Secret Commands are: accents, bak, encounter, treasure, horse");
             case "accents":
                 showAccents(message);
+                break;
+            case 'bak':
+                if (!voiceChannel) message.reply ("Hank requires you to join a voice channel first.");
+                else hankNoise(message);
                 break;
             case "encounter":
                 getEncounter(message);
