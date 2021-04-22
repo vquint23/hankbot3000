@@ -1,4 +1,6 @@
 require('dotenv').config(); 
+const googleTTS = require('google-tts-api');
+const fs = require('fs');
 const fetch = require('node-fetch');
 const Discord = require("discord.js");
 const { Client, MessageEmbed } = require('discord.js');
@@ -7,6 +9,7 @@ const { DiceRoller } = require('rpg-dice-roller');
 const roller = new DiceRoller();
 var messageCount = 0;
 var messageTarget = getRandomNumber(1, 30);
+var voiceChannel = "";
 
 const colors = [
     "images/1.jpg", "images/2.jpg", "images/3.jpg", "images/4.jpg", "images/5.jpg", 
@@ -22,6 +25,16 @@ const colors = [
     "images/solid chestnut4.jpg", "images/solid chestnut5.jpg", "images/solid chestnut6.jpg",
     "images/taupe.jpg", "images/taupe2.jpg", "images/taupe3.jpg", "images/taupe4.jpg", "images/taupe5.jpg", "images/taupe6.jpg",
 ];
+
+const accentCodes = ["af", "sq", "ar", "bn", "ca", "zh", "zh-TW", 
+    "hr", "cs", "dn", "nl", "en", "et", "fi", "fr", "de", "el", "gu", "hi", 
+    "hu", "is", "id", "it", "ja", "kn", "km", "ko", "lv", "ml", "mr", "ne",
+    "no", "pl", "pt", "ro", "ru", "sr", "si", "sk", "es", "su", "sv", "ta", 
+    "te", "th", "tr", "uk","uk", "ur", "vi", 
+]; 
+
+const langCodes = [ "ar", "zh", "en", "fr", "de","hi", "it", "ja", "ko", "pt", "ru", "es"];
+
 
 var items = ["sword","shield","arrow","rupees","potion","glasses","tea","bat","fork","book","journal","dagger",
     "spellbook","spell components","armor","bag of holding","food","rations","friends","charisma", "contacts",
@@ -72,9 +85,72 @@ function showHelp(message){
         ["Ping", "Hank sends back a pong.", false],
         ["Roll", "Use the format \`xdxx +/- x\` to have Hank roll your dice.", false],
         ["Spell", "Search for a spell description using \`spell (name)\`.", false],
-        ["Dog", "Hank will provide a picture of a dog.", false]
+        ["Dog", "Hank will provide a picture of a dog.", false],
+        ["Speak {lang-code} \"text\"", "Provide a 2 letter language code to the translation aloud.", false],
+        ["Translate {lang-code} \"text\"", "Provide a 2 letter language code to see the translation.", false],
+        ["Accent {lang-code} \"text\"", "Provide a 2 letter language code to hear the text with that accent.", false],
+        ["Languages", "Hank displays the available language codes.", false]
     ];           
     message.channel.send(embedFactory(title, null, description, null, null, null, fieldsData, null));
+}
+
+/* Show Languages
+    Shows the available language codes for translation and speech.
+    Secretly, there are MANY more language codes. But they're only for accent use.
+*/
+function showLanguages(message){
+    var title = "Mr. Worldwide Cucco."
+    var description = "Hank knows how to translate into these languages:"
+    var fieldsData = [
+        ["ar", "Arabic", true],
+        ["zh", "Chinese", true],
+        ["en", "English", true],
+        ["fr", "French", true],
+        ["de", "German", true],
+        ["hi", "Hindi", true],
+        ["it", "Italian", true],
+        ["ja", "Japanese", true],
+        ["ko", "Korean", true],
+        ["pt", "Portuguese", true],
+        ["ru", "Russian", true],
+        ["es", "Spanish", true]
+    ];           
+    message.channel.send(embedFactory(title, null, description, null, null, null, fieldsData, null));
+}
+
+/* Show Accents
+    The secret list of all available accents
+*/
+function showAccents(message){
+    var title = "Mr. Worldwide Cucco."
+    var description = "Hank knows how to translate into these languages:"
+    var fieldsData = [
+        ["af", "Afrikaans", true], ["sq", "Albanian", true], ["ar", "Arabic", true], ["bn", "Bengali", true],
+        ["ca", "Catalan", true], ["zh", "Chinese", true], ["zh-TW", "Chinese (Traditional)", true],
+        ["hr", "Croatian", true], ["cs", "Czech", true], ["dn", "Danish", true], ["nl", "Dutch", true],
+        ["en", "English", true], ["et", "Estonian", true], ["fi", "Finnish", true], ["fr", "French", true],
+        ["de", "German", true], ["el", "Greek", true], ["gu", "Gujarati", true], ["hi", "Hindi", true],
+        ["hu", "Hungarian", true], ["is", "Icelandic", true], ["id", "Indonesian", true], ["it", "Italian", true],
+        ["ja", "Japanese", true], ["kn", "Kannada", true], ["km", "Khmer", true], ["ko", "Korean", true],
+        ["lv", "Latvian", true], ["ml", "Malayalem", true], ["mr", "Marathi", true], ["ne", "Nepali", true],
+        ["no", "Norwegian", true], ["pl", "Polish", true], ["pt", "Portuguese", true], ["ro", "Romanian", true],
+        ["ru", "Russian", true], ["sr", "Serbian", true], ["si", "Sinhala", true], ["sk", "Slovak", true],
+        ["es", "Spanish", true], ["su", "Sudanese", true], ["sv", "Swedish", true], ["ta", "Tamil", true],
+        ["te", "Telugu", true], ["th", "Thai", true], ["tr", "Turkish", true], ["uk", "Ukranian", true],
+        ["uk", "Ukranian", true], ["ur", "Urdu", true], ["vi", "Vietnamese", true]
+    ];           
+    message.channel.send(embedFactory(title, null, description, null, null, null, fieldsData, null));
+    title = "Page 2"
+    fieldsData = [
+        ["km", "Khmer", true], ["ko", "Korean", true],
+        ["lv", "Latvian", true], ["ml", "Malayalem", true], ["mr", "Marathi", true], ["ne", "Nepali", true],
+        ["no", "Norwegian", true], ["pl", "Polish", true], ["pt", "Portuguese", true], ["ro", "Romanian", true],
+        ["ru", "Russian", true], ["sr", "Serbian", true], ["si", "Sinhala", true], ["sk", "Slovak", true],
+        ["es", "Spanish", true], ["su", "Sudanese", true], ["sv", "Swedish", true], ["ta", "Tamil", true],
+        ["te", "Telugu", true], ["th", "Thai", true], ["tr", "Turkish", true], ["uk", "Ukranian", true],
+        ["uk", "Ukranian", true], ["ur", "Urdu", true], ["vi", "Vietnamese", true]
+    ];    
+    message.channel.send(embedFactory(title, null, description, null, null, null, fieldsData, null));       
 }
 
 /* Roll Dice
@@ -383,8 +459,102 @@ function getHorse(message){
     //message.channel.send(image);
 }
 
+/* Check Args For Speech
+    Check to ensure the arguments are in {command} {lang-code} "text" format
+    Also takes in a parameter to switch to which command to execute 
+    (say, translate, or accent) 
+ */
+function checkArgsForSpeech(message, args){
+    // check one: number of arguments (must be at least 3)
+    if (args.length < 3) return false;
+    // slice the arguments into three variables
+    var command = args[0];
+    var language = args[1];
+    var sentence = "";
+    if (args.length > 3) {
+        for (var i = 2; i < args.length; i++){
+            sentence = sentence + args[i] + " ";
+        }
+    }
+    else sentence = args[2];
+    // check two: second argument is a viable language
+    switch (command){
+        case "translate":
+            if (langCodes.includes(language)) translate(message, sentence, language, false);
+            else (message.reply("Language code \"" + language + "\" does not exist. Use the \`languages\` command to see what you can use!"))
+            break;
+        case "say":
+            if (langCodes.includes(language)) translate(message, sentence, language, true);
+            else (message.reply("Language code \"" + language + "\" does not exist. Use the \`languages\` command to see what you can use!"))
+            break;
+        case "accent":
+            if (accentCodes.includes(language)) say(message, sentence, language);
+            else (message.reply("Accent code \"" + language + "\" does not exist. Use the \`languages\` command to see what you can use!"))
+            break;
+    }
+}
+
+
+/* Speak
+     Reads the given sentence in the given language.
+     If the sentence is not translated, it will be read in the accent.
+ */
+function say(message, sentence, langCode){
+    googleTTS.getAudioBase64(sentence, {
+        lang: langCode,
+        slow: false,
+      })
+      .then((base64) => {
+        const buffer = Buffer.from(base64, 'base64');
+        fs.writeFileSync('translate.mp3', buffer, { encoding: 'base64' });
+        const connection = voiceChannel.join()
+        .then( connection => {
+            const dispatcher = connection.play('translate.mp3');
+        });
+    })
+    .catch(err => {
+        console.error(err);
+        message.channel.send("An error has occurred, bak bak.");
+    });  
+}
+
+/* Translate
+     Translates the given message to the language specifies, and either returns
+     the translation in the chat or sends the translation to the say function.
+ */
+function translate(message, sentence, langCode, speak){
+    var translation = "";
+    fetch("https://libretranslate.com/translate", {
+        method: "POST",
+        body: JSON.stringify({
+            q: sentence,
+            source: "en",
+            target: langCode
+        }),
+        headers: { "Content-Type": "application/json" }
+    })
+        .then(res => res.json())
+        .then(res => {
+            translation = res.translatedText;
+            if (speak) say(message, translation, langCode);
+            else {
+                var title = "Translation: " + langCode;
+                var fieldsData = [
+                    ["Original Sentence", sentence, false],
+                    ["Translation", translation, false]
+                ];
+                message.channel.send(embedFactory(title, null, null, null, null, null, fieldsData));
+            }
+        })
+        .catch(err => {
+            console.error(err); 
+            message.channel.send("Hank has instead decided to take a nap. Translations are down!");
+        }); 
+}
+
 // Message Recieved
 client.on('message', async message => {
+   voiceChannel = message.member.voice.channel;
     const user = message.author;
     // ignore if a bot sent it
     if (message.author.bot) return;
@@ -433,7 +603,23 @@ client.on('message', async message => {
             case 'spell':
                 getSpell(message, args);
                 break;
+            case 'languages':
+                showLanguages(message);
+                break;
+            case 'say':
+            case 'accent':
+                if (!voiceChannel) {
+                    message.reply ("Hank requires you to join a voice channel first.");
+                    break;
+                }
+            case 'translate':
+                if (checkArgsForSpeech(message, args) == false) 
+                    message.reply("Translate requests should be in the format \`translate {language-code} \"text\".\`.");
+                break;
             // DM Commands! Secret. Shhhhhh.
+            case "accents":
+                showAccents(message);
+                break;
             case "encounter":
                 getEncounter(message);
                 break;
