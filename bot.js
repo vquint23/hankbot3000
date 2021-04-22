@@ -27,7 +27,7 @@ const colors = [
 ];
 
 const accentCodes = ["af", "sq", "ar", "bn", "ca", "zh", "zh-TW", 
-    "hr", "cs", "dn", "nl", "en", "et", "fi", "fr", "de", "el", "gu", "hi", 
+    "hr", "cs", "da", "nl", "en", "et", "fi", "fr", "de", "el", "gu", "hi", 
     "hu", "is", "id", "it", "ja", "kn", "km", "ko", "lv", "ml", "mr", "ne",
     "no", "pl", "pt", "ro", "ru", "sr", "si", "sk", "es", "su", "sv", "ta", 
     "te", "th", "tr", "uk","uk", "ur", "vi", 
