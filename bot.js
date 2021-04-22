@@ -632,7 +632,7 @@ client.on('message', async message => {
             default:
                 var title = "Bak BAK!?";
                 var description = "(It would seem Hank did not understand.)";
-                var footer = "Try `bak help` for the help menu!";
+                var footer = "Try \`bak help\` for the help menu!";
                 message.channel.send(embedFactory(title, null, description, null, null, null, null, footer));
         }
     }
