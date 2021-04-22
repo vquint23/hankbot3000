@@ -450,7 +450,7 @@ function getHorse(message){
         ["Stamina", `${stamina}*, or ${stamina} dashes per short rest`, true],
     ];         
     var color = getRandomNumber(0, colors.length-1);
-    console.log("Number: " + color, ", Color: " + colors[color]);
+    //console.log("Number: " + color, ", Color: " + colors[color]);
     const attachment = new Discord.MessageAttachment(colors[color], "horse.jpg");
     const image = 'attachment://horse.jpg';
     message.reply(embedFactory(title, null, description, null, null, image, fieldsData, null, attachment));
@@ -491,7 +491,6 @@ function checkArgsForSpeech(message, args){
             break;
     }
 }
-
 
 /* Speak
      Reads the given sentence in the given language.
