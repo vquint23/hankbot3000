@@ -629,6 +629,7 @@ client.on('message', async message => {
             // DM Commands! Secret. Shhhhhh.
             case "dmv":
                 message.channel.send("Hank's Secret Commands are: accents, bak, encounter, treasure, horse");
+                break;
             case "accents":
                 showAccents(message);
                 break;
