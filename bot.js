@@ -25,16 +25,14 @@ const colors = [
     "images/solid chestnut4.jpg", "images/solid chestnut5.jpg", "images/solid chestnut6.jpg",
     "images/taupe.jpg", "images/taupe2.jpg", "images/taupe3.jpg", "images/taupe4.jpg", "images/taupe5.jpg", "images/taupe6.jpg",
 ];
-
 const accentCodes = ["af", "sq", "ar", "bn", "ca", "zh", "zh-TW", 
     "hr", "cs", "da", "nl", "en", "et", "fi", "fr", "de", "el", "gu", "hi", 
     "hu", "is", "id", "it", "ja", "kn", "km", "ko", "lv", "ml", "mr", "ne",
     "no", "pl", "pt", "ro", "ru", "sr", "si", "sk", "es", "su", "sv", "ta", 
     "te", "th", "tr", "uk","uk", "ur", "vi", 
 ]; 
-
 const langCodes = [ "ar", "zh", "en", "fr", "de","hi", "it", "ja", "ko", "pt", "ru", "es"];
-
+const hankNoises = ["bak.mp3", "Cluck.mp3", "Clucks.mp3", "Crow.mp3", "honk.mp3", "penguin.mp3"];
 
 var items = ["sword","shield","arrow","rupees","potion","glasses","tea","bat","fork","book","journal","dagger",
     "spellbook","spell components","armor","bag of holding","food","rations","friends","charisma", "contacts",
@@ -552,6 +550,18 @@ function translate(message, sentence, langCode, speak){
         }); 
 }
 
+/* Hank Noise
+    Plays a random chicken noise. Bak bak.    
+ */
+function hankNoise(message){
+    var i = getRandomNumber(0, hankNoises.length-1);
+    var filepath = "./sounds/" + hankNoises[i];
+    const connection = voiceChannel.join()
+        .then( connection => {
+            const dispatcher = connection.play(filepath);
+        });
+}
+
 // Message Recieved
 client.on('message', async message => {
    voiceChannel = message.member.voice.channel;
@@ -605,6 +615,10 @@ client.on('message', async message => {
                 break;
             case 'languages':
                 showLanguages(message);
+                break;
+            case 'bak':
+                if (!voiceChannel) message.reply ("Hank requires you to join a voice channel first.");
+                else hankNoise(message);
                 break;
             case 'say':
             case 'accent':
