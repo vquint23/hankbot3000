@@ -552,9 +552,12 @@ function translate(message, sentence, langCode, speak){
 /* Hank Noise
     Plays a random chicken noise. Bak bak.    
  */
-function hankNoise(message){
-    var i = getRandomNumber(0, hankNoises.length-1);
-    var filepath = "./sounds/" + hankNoises[i];
+function hankNoise(message, path){
+    if (path == null) {
+        var i = getRandomNumber(0, hankNoises.length-1);
+        var filepath = "./sounds/" + hankNoises[i];
+    }
+    else filepath = path;
     const connection = voiceChannel.join()
         .then( connection => {
             const dispatcher = connection.play(filepath);
@@ -627,7 +630,7 @@ client.on('message', async message => {
                 break;
             // DM Commands! Secret. Shhhhhh.
             case "dmv":
-                message.channel.send("Hank's Secret Commands are: accents, bak, encounter, treasure, horse");
+                message.channel.send("Hank's Secret Commands are: accents, bak, encounter, treasure, horse, secret, opening, crow");
                 break;
             case "accents":
                 showAccents(message);
@@ -644,6 +647,18 @@ client.on('message', async message => {
                 break; 
             case "horse":
                 getHorse(message);
+                break;
+            case "secret":
+                if (!voiceChannel) message.reply ("Hank requires you to join a voice channel first.");
+                else hankNoise(message, "Solved.mp3");
+                break;
+            case "opening":
+                if (!voiceChannel) message.reply ("Hank requires you to join a voice channel first.");
+                else hankNoise(message, "Opening.mp3");
+                break;
+            case "crow":
+                if (!voiceChannel) message.reply ("Hank requires you to join a voice channel first.");
+                else hankNoise(message, "./sounds/Crow.mp3");
                 break;
             default:
                 var title = "Bak BAK!?";
