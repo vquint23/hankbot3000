@@ -34,6 +34,15 @@ const accentCodes = ["af", "sq", "ar", "bn", "ca", "zh", "zh-TW",
 const langCodes = [ "ar", "zh", "en", "fr", "de","hi", "it", "ja", "ko", "pt", "ru", "es"];
 const hankNoises = ["bak.mp3", "Cluck.mp3", "Clucks.mp3", "Crow.mp3", "honk.mp3", "penguin.mp3"];
 
+const vocalSpeed = ["slow", "medium", "fast"];
+const vocalPitch = ["high", "medium", "low"];
+const vocalTexture = ["gruff", "smooth", "strained", "relaxed", "breathy", "wolfy (back of throat)", "scratchy", "nasally", "normal"];
+const vocalQuirk = ["incoherent aside from key words", "stutter", "um", "like", "swearing", "thee/thou", "doesn't breathe", "curt", "third person", "bad conjugation", "S is now Z", "w is now v", "rrrrroll", "do not contractions", "whiny", "stuffed nose", "tongue stuck to teeth",
+"mouth too wide", "clenched teeth", "lips barely open", "th is now z", "echo - repeat last sentence/thought", "full title/descriptions", "double adj/adv", "nouns end in  -sen", "l is now w", "repeat last word heard", "sing everything", "wrong em*pha*sis", "pauses a lot", "staccato", "monotonous",
+"whistles the s", "light lisp", "r is now w", "pop those p's", "tut those t's", "xbox style talk", "pouting", "ar/er are aye", "soft elongation - ssssso", "slurs words", "mouth always full", "sigh after each sentence",  "russian mode (no is)", "respond in a question?", "over-exaggerate", 
+"never the full truth", "mutters to themself"
+];
+
 var items = ["sword","shield","arrow","rupees","potion","glasses","tea","bat","fork","book","journal","dagger",
     "spellbook","spell components","armor","bag of holding","food","rations","friends","charisma", "contacts",
     "intelligence","strength","constitution","dexterity","wisdom","gout","hit points","dice","mofongo","french fries",
@@ -564,6 +573,25 @@ function hankNoise(message, path){
         });
 }
 
+/* NPC Roller
+    Gives some NPC voice traits - keep em interesting :D
+*/
+function npcRoller(message){
+    var speed = roller.roll('1d3');    
+    var pitch = roller.roll('1d3');
+    var texture = roller.roll('1d8');
+    var quirk = roller.roll('1d50');
+    var title = "NPC Mannerisms";
+    var fieldsData = [
+        ["Speed", vocalSpeed[speed.total - 1], false],
+        ["Pitch", vocalPitch[pitch.total - 1], false],
+        ["Texture", vocalTexture[texture.total - 1], false],
+        ["Quirk", vocalQuirk[quirk.total - 1], false]
+    ];
+    message.channel.send(embedFactory(title, null, null, null, null, null, fieldsData));
+
+}
+
 // Message Recieved
 client.on('message', async message => {
    voiceChannel = message.member.voice.channel;
@@ -630,7 +658,7 @@ client.on('message', async message => {
                 break;
             // DM Commands! Secret. Shhhhhh.
             case "dmv":
-                message.channel.send("Hank's Secret Commands are: accents, bak, encounter, treasure, horse, secret, opening, crow");
+                message.channel.send("Hank's Secret Commands are: accents, bak, encounter, treasure, horse, secret, opening, crow, npc");
                 break;
             case "accents":
                 showAccents(message);
@@ -660,6 +688,9 @@ client.on('message', async message => {
                 if (!voiceChannel) message.reply ("Hank requires you to join a voice channel first.");
                 else hankNoise(message, "./sounds/Crow.mp3");
                 break;
+            case "npc":
+                npcRoller(message);
+                break;            
             default:
                 var title = "Bak BAK!?";
                 var description = "(It would seem Hank did not understand.)";
