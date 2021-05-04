@@ -223,147 +223,39 @@ function getSpell(message, args){
 }
 
 /* Get Encounter
-    Rolls a d100, and returns an encounter based on the number. 
+    Rolls a d20, and returns an encounter based on the number. 
  */
 function getEncounter(message){
-    try {var roll = roller.roll("1d100");}
+    try {var roll = roller.roll("1d20");}
     catch (error){ return message.reply("Incorrect command; Hank has stolen your dice as penance!");}
     var title = "Encounter";
     var encounter = roll.total;
     var description = encounter + ": ";
-    if (encounter <= 5) {
-        roll = roller.roll("1d6+1");
-        description += roll.total + " Chuchus!";
-    }
-    else if (encounter >=6 && encounter <= 11) {
-        description += "Swarm of ";
-        roll = roller.roll("1d4");
-        switch (roll.total){
-            case 1:
-                description += " Keese!";
-                break;
-            case 2:
-                description += " Fire Keese!";
-                break;
-            case 3:
-                description += " Ice Keese!";
-                break;
-            case 4:
-                description += " Lightning Keese!";
-                break;
-        }
-    }
-    else if (encounter >= 12 && encounter <= 16){
-        roll = roller.roll("1d4+1");
-        description += roll.total + " Octoroks!";
-    }
-    else if (encounter == 17 || encounter == 18) {
-        roll = roller.roll("1d3");
-        switch (roll.total){
-            case 1:
-                description += " Fire Wizzrobe!"
-                break;
-            case 2:
-                description += " Ice Wizzrobe!"
-                break;
-            case 3:
-                description += " Lightning Wizzrobe!"
-                break;
-                
-        }
-    }
-    else if (encounter >= 19 && encounter <= 28){
-        roll = roller.roll("1d6+2");
-        if (roll.total == 8) {
-            roll = roller.roll("1d4+2");
-            description += roll.total + " Stalkoblins!";
-        }
-        else description += roll.total + " Bokoblins!";
-    }
-    else if (encounter >= 28 && encounter <= 32){
-        roll = roller.roll("1d4+1");
-        if (roll.total == 5) {
-            roll = roller.roll("1d4+2");
-            description += roll.total + " Stalmoblins!";
-        }
-        else description += roll.total + " Moblins!";
-    }
-    else if (encounter >= 33 && encounter <= 42){
-        roll = roller.roll("1d4+1");
-        if (roll.total == 5) {
-            roll = roller.roll("1d4+2");
-            description += roll.total + " Stalizalfos!";
-        }
-        else description += roll.total + " Lizalfos!";
-    }
-    else if (encounter >= 43 && encounter <= 47){
-        roll = roller.roll("1d2+1");
-        description += roll.total + " Yiga! Suprise Round!";
-    }
-    else if (encounter >= 48 && encounter <= 52){
-        roll = roller.roll("1d4+2");
-        description += roll.total + " Pebblits!";
-    }
-    else if (encounter >= 52 && encounter <= 62){
-        roll = roller.roll("1d4+2");
-        if (roll.total == 6){
-            roll = roller.roll("1d4");
-            description += roll.total + " Boko Riders!";
-        }
-        else description += roll.total + " Horses.";
-    }
-    else if (encounter >= 63 && encounter <= 72){
-        roll = roller.roll("1d6");
-        description += roll.total + " Wild Game.";
-    }
-    else if (encounter >= 73 && encounter <= 82){
-        roll = roller.roll("1d6");
-        description += "Enemy Camp Number " + roll.total;
-    }
-    else if (encounter >= 83 && encounter <= 92) description += "Shrine!";
-    else if (encounter == 93 || encounter == 94){
-        description += "Treasure Chest! \n" + getTreasure(message, true);
-    }
-    else if (encounter >= 95 && encounter <= 99){
-        roll = roller.roll("1d8");
-        if (roll.total == 6 || roll.total == 7) {
-            roll = roller.roll("1d8");
-            description += roll.total += " Luminous Ore Deposits";
-        }
-        else if (roll.total == 8) {
-            roll = roller.roll("1d4");
-            description += roll.total += " Rare Ore Deposits";
-        }
-        else description += roll.total + " Ore Deposits.";
-    }
-    else {
-        description += " Teebo!";
-        roll = roller.roll ("1d7");
-        switch (roll.total){
-            case 1:
-                description += "\nTalking to fairies.";
-                break;
-            case 2:
-                description += "\nPetting blupees.";
-                break;
-            case 3:
-                description += "\nArguing with an adult.";
-                break;
-            case 4:
-                description += "\nFollowing a dog.";
-                break;
-            case 5:
-                description += "\nFighting monsters.";
-                break;
-            case 6:
-                description += "\nInspecting the area.";
-                break;
-            case 7:
-                description += "\nLooking at a Shrine.";
-                break;
-        }
-    }  
-    message.reply(embedFactory(title, null, description, null, null, null, null, null));
+    switch (encounter){
+        case 1: description += "Oberon"
+        break;
+        case 2: case 3: description += "Shrine"
+        break;        
+        case 4: description += "Safe Clearing"
+        break;
+        case 5:  description += "Horses"
+        break;   
+        case 6: case 7: case 8: description += "Ruins"
+        break;  
+        case 9: case 10: case 11: description += "Monster Camp"
+        break;  
+         case 12: case 13:  description += "Monsters Attacking Travelers"
+        break;  
+        case 14: case 15:  description += "Traveling Merchant"
+        break;   
+        case 16:  description += "\"Travelers\""
+        break;
+        case 17: case 18: case 19: description += "Wild Animals"
+        break;
+        case 20: description += " Teebo!";
+        break;
+    }    
+    message.reply(embedFactory(title, null, description));
 }
 
 /* Get Treasure
@@ -425,45 +317,18 @@ function getTreasure(message, reward){
  */
 function getHorse(message){
     var title = "Horse Generator";        
-    var description = "Horse Stats";
-    var hp = 50;
-    var movement = 40;
+    var description = "Horse Type: ";
     var strength = roller.roll("1d5").total;        
-    switch (strength){
-        case 1: 
-            hp = 100;
-            break;
-        case 2:
-            hp = 150;
-            break;
-        case 3: 
-            hp = 180;
-            break
-        case 4:
-            hp = 220;
-            break;
-        case 5:
-            hp = 300;
-            break;
-    }
-    var speed = roller.roll("1d4+1").total;
-    if(speed == 2) movement = 50;
-    if (speed == 3) movement = 60;
-    if (speed == 4) movement = 70;
-    if (speed == 5) movement = 80;        
+    var speed = roller.roll("1d4+1").total;   
     var stamina = roller.roll("1d4+1").total;
     var color = roller.roll("1d7-1").total; 
-    var fieldsData = [
-        ["Strength", `${strength}*, ${hp} HP.`, true],
-        ["Speed", `${speed}*, ${movement} ft. movement.`, true],
-        ["Stamina", `${stamina}*, or ${stamina} dashes per short rest`, true],
-    ];         
+    if (speed > stamina && speed > strength) description += "Riding Horse";
+    else if (stamina > speed && stamina > strength) description += "Draft Horse";
+    else description += "Warhorse";
     var color = getRandomNumber(0, colors.length-1);
-    //console.log("Number: " + color, ", Color: " + colors[color]);
     const attachment = new Discord.MessageAttachment(colors[color], "horse.jpg");
     const image = 'attachment://horse.jpg';
-    message.reply(embedFactory(title, null, description, null, null, image, fieldsData, null, attachment));
-    //message.channel.send(image);
+    message.reply(embedFactory(title, null, description, null, null, image, null, null, attachment));
 }
 
 /* Check Args For Speech
