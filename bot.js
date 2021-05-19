@@ -399,17 +399,19 @@ async function say(message, sentence, langCode){
      If "speak" is true, the say function is called, and uses the translated text.
 */
 async function translateText(message, sentence, langCode, speak) {
-    let [translations] = await translate.translate(sentence, langCode).catch(err=>console.error(err));
-    translations = Array.isArray(translations) ? translations : [translations];
-    if (speak) say(message, translations[0], langCode);
-    else {
-        var title = "Translation:" + langCode;
-        var fieldsData = [
-        ["Original Sentence", sentence, false],
-        ["Translation", translations, false]
-        ];
-        message.channel.send(embedFactory(title, null, null, null, null, null, fieldsData));  
-    }
+    try{
+        let [translations] = await translate.translate(sentence, langCode).catch(err=>console.error(err));
+        translations = Array.isArray(translations) ? translations : [translations];
+        if (speak) say(message, translations[0], langCode);
+        else {
+            var title = "Translation:" + langCode;
+            var fieldsData = [
+            ["Original Sentence", sentence, false],
+            ["Translation", translations, false]
+            ];
+            message.channel.send(embedFactory(title, null, null, null, null, null, fieldsData));  
+        }
+    }catch(error){ console.log("dis it: "+ error); }
 }
 
 /* Hank Noise
