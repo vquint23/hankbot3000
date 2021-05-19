@@ -9,7 +9,13 @@ const { DiceRoller } = require('rpg-dice-roller');
 const roller = new DiceRoller();
 const {Translate} = require('@google-cloud/translate').v2;
 const projectId = "frenchbot";
-const translate = new Translate({projectId});
+const translate = new Translate({
+    projectId: projectId,
+    credentials: {
+      private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      client_email: process.env.GOOGLE_CLIENT_EMAIL
+    }
+  });
 
 
 var messageCount = 0;
