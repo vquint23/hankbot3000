@@ -384,13 +384,11 @@ async function say(message, sentence, langCode){
         const buffer = Buffer.from(base64, 'base64');
         fs.writeFileSync('translate.mp3', buffer, { encoding: 'base64' });
         const connection = voiceChannel.join()
-        .then( connection => {
-            const dispatcher = connection.play('translate.mp3');
-        }).catch(err=> console.error("No, here"));
+        .then( connection => {const dispatcher = connection.play('translate.mp3');})
     })
     .catch(err => {
         console.error(err);
-        message.channel.send("An error has occurred, bak bak.");
+        message.channel.send("A translation error has occurred, bak bak.");
     });  
 }
 
@@ -399,17 +397,19 @@ async function say(message, sentence, langCode){
      If "speak" is true, the say function is called, and uses the translated text.
 */
 async function translateText(message, sentence, langCode, speak) {
-    let [translations] = await translate.translate(sentence, langCode).catch(err=>console.error(err));
+    try{
+        let [translations] = await translate.translate(sentence, langCode).catch(err=>console.error(err));
         //translations = Array.isArray(translations) ? translations : [translations];
-        if (speak) say(message, translations, langCode).catch(err=>console.log("Here."));
+        if (speak) say(message, translations, langCode);
         else {
             var title = "Translation:" + langCode;
             var fieldsData = [
             ["Original Sentence", sentence, false],
             ["Translation", translations, false]
             ];
-            message.channel.send(embedFactory(title, null, null, null, null, null, fieldsData)).catch(err=>console.log("Or Here."));  
+            message.channel.send(embedFactory(title, null, null, null, null, null, fieldsData));  
         }
+    }catch(error){ console.log("dis it: "+ error); }
 }
 
 /* Hank Noise
