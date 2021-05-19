@@ -19,10 +19,13 @@
   "homepage": "https://github.com/vquint23/hankbot3000#readme",
   "dependencies": {
     "@discordjs/opus": "^0.5.0",
+    "@google-cloud/translate": "^6.2.1",
     "discord.js": "^12.5.3",
     "dotenv": "^8.2.0",
     "ffmpeg-static": "^4.3.0",
     "google-tts-api": "^2.0.2",
-    "rpg-dice-roller": "^4.5.2"
+    "opusscript": "^0.0.8",
+    "rpg-dice-roller": "^5.0.0",
+    "translate": "^1.2.3"
   }
 }

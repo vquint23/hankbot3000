@@ -7,6 +7,11 @@ const { Client, MessageEmbed } = require('discord.js');
 const client = new Discord.Client();
 const { DiceRoller } = require('rpg-dice-roller');
 const roller = new DiceRoller();
+const {Translate} = require('@google-cloud/translate').v2;
+const projectId = "frenchbot";
+const translate = new Translate({projectId});
+
+
 var messageCount = 0;
 var messageTarget = getRandomNumber(1, 30);
 var voiceChannel = "";
@@ -336,7 +341,7 @@ function getHorse(message){
     Also takes in a parameter to switch to which command to execute 
     (say, translate, or accent) 
  */
-function checkArgsForSpeech(message, args){
+async function checkArgsForSpeech(message, args){
     // check one: number of arguments (must be at least 3)
     if (args.length < 3) return false;
     // slice the arguments into three variables
@@ -352,15 +357,15 @@ function checkArgsForSpeech(message, args){
     // check two: second argument is a viable language
     switch (command){
         case "translate":
-            if (langCodes.includes(language)) translate(message, sentence, language, false);
+            if (langCodes.includes(language)) await translateText(message, sentence, language, false);
             else (message.reply("Language code \"" + language + "\" does not exist. Use the \`languages\` command to see what you can use!"))
             break;
         case "say":
-            if (langCodes.includes(language)) translate(message, sentence, language, true);
+            if (langCodes.includes(language)) await translateText(message, sentence, language, true);
             else (message.reply("Language code \"" + language + "\" does not exist. Use the \`languages\` command to see what you can use!"))
             break;
         case "accent":
-            if (accentCodes.includes(language)) say(message, sentence, language);
+            if (accentCodes.includes(language)) await say(message, sentence, language);
             else (message.reply("Accent code \"" + language + "\" does not exist. Use the \`languages\` command to see what you can use!"))
             break;
     }
@@ -370,7 +375,7 @@ function checkArgsForSpeech(message, args){
      Reads the given sentence in the given language.
      If the sentence is not translated, it will be read in the accent.
  */
-function say(message, sentence, langCode){
+function say(message, sentence, langCode){    
     googleTTS.getAudioBase64(sentence, {
         lang: langCode,
         slow: false,
@@ -381,7 +386,7 @@ function say(message, sentence, langCode){
         const connection = voiceChannel.join()
         .then( connection => {
             const dispatcher = connection.play('translate.mp3');
-        });
+        }).catch(err=> console.error("No, here"));
     })
     .catch(err => {
         console.error(err);
@@ -389,38 +394,22 @@ function say(message, sentence, langCode){
     });  
 }
 
-/* Translate
-     Translates the given message to the language specifies, and either returns
-     the translation in the chat or sends the translation to the say function.
- */
-function translate(message, sentence, langCode, speak){
-    var translation = "";
-    fetch("https://libretranslate.com/translate", {
-        method: "POST",
-        body: JSON.stringify({
-            q: sentence,
-            source: "en",
-            target: langCode
-        }),
-        headers: { "Content-Type": "application/json" }
-    })
-        .then(res => res.json())
-        .then(res => {
-            translation = res.translatedText;
-            if (speak) say(message, translation, langCode);
-            else {
-                var title = "Translation: " + langCode;
-                var fieldsData = [
-                    ["Original Sentence", sentence, false],
-                    ["Translation", translation, false]
-                ];
-                message.channel.send(embedFactory(title, null, null, null, null, null, fieldsData));
-            }
-        })
-        .catch(err => {
-            console.error(err); 
-            message.channel.send("Hank has instead decided to take a nap. Translations are down!");
-        }); 
+/* Translate Text
+     Uses Google Cloud Translate API to translate text from english to desired language.
+     If "speak" is true, the say function is called, and uses the translated text.
+*/
+async function translateText(message, sentence, langCode, speak) {
+    let [translations] = await translate.translate(sentence, langCode).catch(err=>console.error(err));
+    translations = Array.isArray(translations) ? translations : [translations];
+    if (speak) await say(message, translations[0], langCode);
+    else {
+        var title = "Translation:" + langCode;
+        var fieldsData = [
+        ["Original Sentence", sentence, false],
+        ["Translation", translations, false]
+        ];
+        message.channel.send(embedFactory(title, null, null, null, null, null, fieldsData));  
+    }
 }
 
 /* Hank Noise
@@ -458,7 +447,7 @@ function npcRoller(message){
 }
 
 // Message Recieved
-client.on('message', async message => {
+client.on('message', async  message => {
    voiceChannel = message.member.voice.channel;
     const user = message.author;
     // ignore if a bot sent it
