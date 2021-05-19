@@ -401,8 +401,8 @@ async function say(message, sentence, langCode){
 async function translateText(message, sentence, langCode, speak) {
     try{
         let [translations] = await translate.translate(sentence, langCode).catch(err=>console.error(err));
-        translations = Array.isArray(translations) ? translations : [translations];
-        if (speak) say(message, translations[0], langCode);
+        //translations = Array.isArray(translations) ? translations : [translations];
+        if (speak) say(message, translations, langCode);
         else {
             var title = "Translation:" + langCode;
             var fieldsData = [
