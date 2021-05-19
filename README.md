@@ -13,7 +13,7 @@ Hank's prefix is `bak`. This is nonnegotiable.
 If you or a loved one are ever overwhelmed by Hank's presence and sheer capability, the `help` command is here for you. 
 
 | **Command** | **Example Usage** | **Description** |
-| :-----------:|:-------------:|:----------------:| 
+| :-----------|:-------------|:----------------| 
 | `help` | `bak help` | Opens this help menu. |
 | `ping` | `bak ping` |Hank sends back a pong. | 
 | `roll` | `bak roll 1d4 + 2` | Have Hank roll your dice. | 
@@ -73,7 +73,7 @@ In an extreme breach of confidentiality, Hank is releasing the hidden commands t
 
 
 | **Secret Command** | **Description** |
-| :-----------:|:----------------:| 
+| :-----------|:----------------| 
 | `accents` | Hank shows all possible codes for accents There's a LOT. |
 | `encounter` | Hank determines an encounter for the adventuerers, be it treasure, NPCs, or danger! | 
 | `treasure` | Have shares some of his inordinate wealth. | 
