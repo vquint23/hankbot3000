@@ -93,7 +93,7 @@ function showHelp(message){
         ["Roll", "Use the format \`xdxx +/- x\` to have Hank roll your dice.", false],
         ["Spell", "Search for a spell description using \`spell (name)\`.", false],
         ["Dog", "Hank will provide a picture of a dog.", false],
-        ["Speak {lang-code} \"text\"", "Provide a 2 letter language code to the translation aloud.", false],
+        ["Say {lang-code} \"text\"", "Provide a 2 letter language code to the translation aloud.", false],
         ["Translate {lang-code} \"text\"", "Provide a 2 letter language code to see the translation.", false],
         ["Accent {lang-code} \"text\"", "Provide a 2 letter language code to hear the text with that accent.", false],
         ["Languages", "Hank displays the available language codes.", false]
