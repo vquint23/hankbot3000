@@ -375,8 +375,8 @@ async function checkArgsForSpeech(message, args){
      Reads the given sentence in the given language.
      If the sentence is not translated, it will be read in the accent.
  */
-function say(message, sentence, langCode){    
-    googleTTS.getAudioBase64(sentence, {
+async function say(message, sentence, langCode){    
+    await googleTTS.getAudioBase64(sentence, {
         lang: langCode,
         slow: false,
       })
@@ -401,7 +401,7 @@ function say(message, sentence, langCode){
 async function translateText(message, sentence, langCode, speak) {
     let [translations] = await translate.translate(sentence, langCode).catch(err=>console.error(err));
     translations = Array.isArray(translations) ? translations : [translations];
-    if (speak) await say(message, translations[0], langCode);
+    if (speak) say(message, translations[0], langCode);
     else {
         var title = "Translation:" + langCode;
         var fieldsData = [
