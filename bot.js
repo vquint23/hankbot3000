@@ -443,7 +443,6 @@ function npcRoller(message){
         ["Quirk", vocalQuirk[quirk.total - 1], false]
     ];
     message.channel.send(embedFactory(title, null, null, null, null, null, fieldsData));
-
 }
 
 // Message Recieved
